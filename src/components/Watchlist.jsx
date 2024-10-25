@@ -1,7 +1,15 @@
-import React from 'react';
-import { useWatchlist } from '../hooks/usewatchlist.js';
+import React, { useState } from 'react';
+import { useWatchlist } from '../hooks/useWatchlist'; // Ensure correct casing in import
+
 const Watchlist = () => {
-  const { watchlist, setWatchlist } = useWatchlist();
+  const { watchlist } = useWatchlist();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter watchlist based on search query
+  const filteredWatchlist = watchlist.filter((element) =>
+    element.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
       <div>
@@ -21,6 +29,8 @@ const Watchlist = () => {
           type="search"
           placeholder="Search for movies"
           className="border-black-1 bg-slate-200 hover:bg-blue-500 p-2 w-52"
+          value={searchQuery} // Set value from state
+          onChange={(e) => setSearchQuery(e.target.value)} // Update state on input change
         />
       </div>
       <table className="w-full border border-slate mt-4">
@@ -33,26 +43,23 @@ const Watchlist = () => {
           </tr>
         </thead>
         <tbody>
-        {watchlist.map((element,index)=>(
-             <tr className="border border-black text-center">
-             <td>
-               <img
-                 className="h-20 w-20 m-2"
-                 src={`https://image.tmdb.org/t/p/w500${element.poster_path}`}
-                 alt="Movie Poster"
-               />
-               {element.title}
-             </td>
-             <td className="p-2">8.5</td>
-             <td className="p-2">High</td>
-             <td className="p-2">Action</td>
-           </tr>
-        ))}
+          {filteredWatchlist.map((element, index) => (
+            <tr key={index} className="border border-black text-center">
+              <td className="flex items-center">
+                <img
+                  className="h-20 w-20 m-2"
+                  src={`https://image.tmdb.org/t/p/w500${element.poster_path}`}
+                  alt={`${element.title} Poster`}
+                />
+                {element.title}
+              </td>
+              <td className="p-2">8.5</td>
+              <td className="p-2">High</td>
+              <td className="p-2">Action</td>
+            </tr>
+          ))}
         </tbody>
       </table>
-     
-
-      
     </>
   );
 };
