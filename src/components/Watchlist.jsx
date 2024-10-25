@@ -1,6 +1,7 @@
 import React from 'react';
-
+import { useWatchlist } from '../hooks/usewatchlist.js';
 const Watchlist = () => {
+  const { watchlist, setWatchlist } = useWatchlist();
   return (
     <>
       <div>
@@ -32,22 +33,26 @@ const Watchlist = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="border border-black text-center">
-            <td>
-              <img
-                className="h-20 w-20 m-2"
-                src="data:image/jpeg;base64,..."
-                alt="Movie Poster"
-              />
-              Movie Name
-            </td>
-            <td className="p-2">8.5</td>
-            <td className="p-2">High</td>
-            <td className="p-2">Action</td>
-          </tr>
-          {/* More rows can be added dynamically */}
+        {watchlist.map((element,index)=>(
+             <tr className="border border-black text-center">
+             <td>
+               <img
+                 className="h-20 w-20 m-2"
+                 src={`https://image.tmdb.org/t/p/w500${element.poster_path}`}
+                 alt="Movie Poster"
+               />
+               {element.title}
+             </td>
+             <td className="p-2">8.5</td>
+             <td className="p-2">High</td>
+             <td className="p-2">Action</td>
+           </tr>
+        ))}
         </tbody>
       </table>
+     
+
+      
     </>
   );
 };
