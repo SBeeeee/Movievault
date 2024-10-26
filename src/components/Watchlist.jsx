@@ -12,7 +12,7 @@ const Watchlist = () => {
   const fetchGenres = async () => {
     try {
       const response = await axios.get(
-        `https://api.themoviedb.org/3/genre/movie/list?api_key=cc12bca70c68345c53110fd767147544&language=en-US`
+        `https://api.themoviedb.org/3/genre/movie/list?api_key={yourapikey}&language=en-US`
       );
       const genreMap = response.data.genres.reduce((acc, genre) => {
         acc[genre.id] = genre.name;
