@@ -68,9 +68,8 @@ const Movies = ({ pageno }) => {
           </div>
         </div>
       ))}
-      {watchlist.map((element)=>(
-        <div>{element.title}</div>
-      ))}
+
+      
     </>
   );
 };

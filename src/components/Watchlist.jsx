@@ -1,14 +1,39 @@
-import React, { useState } from 'react';
-import { useWatchlist } from '../hooks/useWatchlist'; // Ensure correct casing in import
+import React, { useState, useEffect } from 'react';
+import { useWatchlist } from '../hooks/useWatchlist';
+import axios from 'axios';
 
 const Watchlist = () => {
   const { watchlist } = useWatchlist();
   const [searchQuery, setSearchQuery] = useState('');
+  const [genres, setGenres] = useState({});
+  const [selectedGenre, setSelectedGenre] = useState('All Genre');
+
+  // Fetch genres from the API
+  const fetchGenres = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/genre/movie/list?api_key=cc12bca70c68345c53110fd767147544&language=en-US`
+      );
+      const genreMap = response.data.genres.reduce((acc, genre) => {
+        acc[genre.id] = genre.name;
+        return acc;
+      }, {});
+      setGenres(genreMap);
+    } catch (error) {
+      console.error('Error fetching genres:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGenres();
+  }, []);
 
   // Filter watchlist based on search query
-  const filteredWatchlist = watchlist.filter((element) =>
-    element.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredWatchlist = watchlist.filter((element) => {
+    const matchesSearch = element.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesGenre = selectedGenre === 'All Genre' || element.genre_ids.some(id => genres[id] === selectedGenre);
+    return matchesSearch && matchesGenre;
+  });
 
   return (
     <>
@@ -17,7 +42,8 @@ const Watchlist = () => {
           {['All Genre', 'Action', 'Crime'].map((genre) => (
             <div
               key={genre}
-              className="bg-slate-300 hover:bg-blue-500 text-white text-lg rounded-xl w-24 text-center mr-2"
+              className={`bg-slate-300 hover:bg-blue-500 text-white text-lg rounded-xl w-24 text-center mr-2 hover:cursor-pointer ${selectedGenre === genre ? 'bg-blue-500' : ''}`}
+              onClick={() => setSelectedGenre(genre)} // Update selected genre on click
             >
               {genre}
             </div>
@@ -29,8 +55,8 @@ const Watchlist = () => {
           type="search"
           placeholder="Search for movies"
           className="border-black-1 bg-slate-200 hover:bg-blue-500 p-2 w-52"
-          value={searchQuery} // Set value from state
-          onChange={(e) => setSearchQuery(e.target.value)} // Update state on input change
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
       <table className="w-full border border-slate mt-4">
@@ -53,9 +79,11 @@ const Watchlist = () => {
                 />
                 {element.title}
               </td>
-              <td className="p-2">8.5</td>
+              <td className="p-2">{element.vote_average || 'N/A'}</td>
               <td className="p-2">High</td>
-              <td className="p-2">Action</td>
+              <td className="p-2">
+                {element.genre_ids.map((id) => genres[id] || 'Unknown').join(', ')}
+              </td>
             </tr>
           ))}
         </tbody>

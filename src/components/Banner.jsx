@@ -43,7 +43,7 @@ const Banner = () => {
                     {movieTitle}
                 </div>
             </div>
-            <div className="w-screen text-center">Trending</div>
+            <div className="w-screen text-center font-extrabold text-lg">Trending</div>
         </>
     );
 };
