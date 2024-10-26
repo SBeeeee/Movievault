@@ -32,7 +32,7 @@ const Movies = ({ pageno }) => {
     const fetchMovies = async () => {
       try {
         const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/popular?api_key=cc12bca70c68345c53110fd767147544&language=en-US&page=${pageno}`
+          `https://api.themoviedb.org/3/movie/popular?api_key={yourapikey}&language=en-US&page=${pageno}`
         );
         setMovies(response.data.results);
 
