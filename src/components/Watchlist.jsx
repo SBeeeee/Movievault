@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useWatchlist } from '../hooks/useWatchlist';
+import { useWatchlist } from '../hooks/usewatchlist';
 import axios from 'axios';
 
 const Watchlist = () => {
