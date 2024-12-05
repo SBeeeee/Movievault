@@ -9,7 +9,7 @@ const Banner = () => {
         const fetchBannerImage = async () => {
             try {
                 const response = await axios.get(
-                    'https://api.themoviedb.org/3/movie/popular?api_key=cc12bca70c68345c53110fd767147544&language=en-US&page=1'
+                    'https://api.themoviedb.org/3/movie/popular?api_key={apikey}&language=en-US&page=1'
                 );
 
                 const randomMovie = response.data.results[Math.floor(Math.random() * response.data.results.length)];
